@@ -2,14 +2,14 @@ const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const passport = require('./config/passport'); // Adjust path as needed
+const authRoutes = require('./routes/auth');
+const PORT = process.env.PORT || 3000;
 require('dotenv').config();
 
 const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
 // Session middleware
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -28,14 +28,13 @@ mongoose.connect(process.env.MONGODB_URI, {
 }).then(() => console.log('MongoDB Connected'))
   .catch(err => console.error(err));
 
-// Include routes
-const authRoutes = require('./routes/auth'); // Adjust path as needed
+// Routes
 app.use('/api/auth', authRoutes);
 app.get("/profile",(req,res)=>{
     res.status(200).send("hello profile")
 })
-// Start server
-const PORT = process.env.PORT || 5000;
+
+// Start Server
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
