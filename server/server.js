@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const passport = require('./config/passport'); // Adjust path as needed
 const authRoutes = require('./routes/auth');
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 require('dotenv').config();
 
 const app = express();
