@@ -1,17 +1,28 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../redux/actions/authActions';
+import Alert from '../component/alert';
 
 
 const Login = () => {
-    const [username, setUsername] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+   const [alert, setAlert] = useState(null);
   const dispatch = useDispatch();
   const { error, status } = useSelector(state => state.auth);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(login({ username, password }));
+    dispatch(login({ username, password }))
+    .unwrap()
+    .then((data)=>{
+      setAlert({ message: 'Login successful!', type: 'success' });
+        console.log('Login successful:', data);
+    })
+    .catch((err)=>{
+      setAlert({ message: 'Your email or password is incorrect', type: 'error' });
+      console.error('Login failed:', err);
+    })
   };
 
   return (
@@ -36,7 +47,7 @@ const Login = () => {
           {status === 'loading' ? 'Logging in...' : 'Login'}
         </button>
       </form>
-      {error && <p>{error}</p>}
+      {alert && <Alert message={alert.message} type={alert.type} />}
     </div>
   );
 }   

@@ -3,13 +3,14 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const passport = require('./config/passport'); // Adjust path as needed
 const authRoutes = require('./routes/auth');
+const flash = require('connect-flash');
 const cors = require('cors');
 const PORT = process.env.PORT || 5000;
 require('dotenv').config();
 
 const app = express();
 app.use(cors());
-
+app.use(flash());
 // Middleware
 app.use(express.json());
 // Session middleware
