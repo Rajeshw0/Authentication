@@ -33,9 +33,6 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.get("/profile",(req,res)=>{
-    res.status(200).send("hello profile")
-})
 
 // Start Server
 app.listen(PORT, () => {

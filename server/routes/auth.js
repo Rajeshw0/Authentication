@@ -21,7 +21,7 @@ router.post('/register', async (req, res) => {
 });
 // Login Route
 router.post('/login', passport.authenticate('local', {
-     successRedirect: '/profile',
+     successRedirect: '/api/auth/profile',
     failureRedirect: '/login',
     failureFlash: true
 }));
@@ -34,11 +34,16 @@ router.get('/logout', (req, res) => {
 
 // Profile Route
 router.get('/profile', (req, res) => {
-    if (req.isAuthenticated()) {
-        res.json({ user: req.user });
-    } else {
-        res.status(401).send('Unauthorized');
+    try {
+        if (req.isAuthenticated()) {
+            res.status(200).json({ user: req.user });
+        } else {
+            console.log("unautharised")
+        }
+    } catch (error) {
+        res.status(401).send(error);
     }
+   
 });
 
 module.exports = router;
