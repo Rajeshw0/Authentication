@@ -1,48 +1,51 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { register, login, logout } from '../actions/authActions';
 
-const initialState = {
-  user: null,
-  isAuthenticated: false,
-  status: 'idle',
-  error: null
-};
-
 const authSlice = createSlice({
   name: 'auth',
-  initialState,
-  reducers: {},
+  initialState: {
+    isAuthenticated: false,
+    profile: null,
+    user:null,
+    status: 'idle',
+    error: null,
+  },
+  reducers: {
+    setUserProfile(state, action) {
+      state.profile = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(register.pending, (state) => {
-        state.status = 'loading';
-      })
       .addCase(register.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.user = action.payload;
         state.isAuthenticated = true;
-      })
-      .addCase(register.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      })
-      .addCase(login.pending, (state) => {
-        state.status = 'loading';
+        state.user = action.payload.user;
+        state.status = 'succeeded';
       })
       .addCase(login.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.user = action.payload;
         state.isAuthenticated = true;
-      })
-      .addCase(login.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
+        state.user = action.payload.user;
+        state.status = 'succeeded';
       })
       .addCase(logout.fulfilled, (state) => {
-        state.user = null;
         state.isAuthenticated = false;
-      });
-  }
+        state.user = null;
+        state.status = 'succeeded';
+      })
+      .addMatcher(
+        (action) => action.type.endsWith('/pending'),
+        (state) => {
+          state.status = 'loading';
+        }
+      )
+      .addMatcher(
+        (action) => action.type.endsWith('/rejected'),
+        (state, action) => {
+          state.status = 'failed';
+          state.error = action.error.message;
+        }
+      );
+  },
 });
 
 export default authSlice.reducer;
