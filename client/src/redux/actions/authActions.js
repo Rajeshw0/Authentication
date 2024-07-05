@@ -1,4 +1,3 @@
-// src/redux/actions/authActions.js
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../axiosInstance';
 
@@ -22,6 +21,17 @@ export const login = createAsyncThunk(
       return response.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data); // Use rejectWithValue to pass error data
+    }
+  }
+);
+export const fetchUserProfile = createAsyncThunk(
+  'auth/fetchUserProfile',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get('/api/auth/profile');
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
     }
   }
 );

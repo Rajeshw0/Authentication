@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../redux/actions/authActions';
 import Alert from '../component/alert';
+import { useRouter } from 'next/router';
+import withAuthRedirect from '../component/withAuthRedirect';
 
 
 const Login = () => {
@@ -9,6 +11,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
    const [alert, setAlert] = useState(null);
   const dispatch = useDispatch();
+  const router = useRouter();
   const { error, status } = useSelector(state => state.auth);
 
   const handleSubmit = (e) => {
@@ -18,6 +21,7 @@ const Login = () => {
     .then((data)=>{
       setAlert({ message: 'Login successful!', type: 'success' });
         console.log('Login successful:', data);
+        router.push('/api/auth/profile');
     })
     .catch((err)=>{
       setAlert({ message: 'Your email or password is incorrect', type: 'error' });
@@ -52,4 +56,4 @@ const Login = () => {
   );
 }   
 
-export default Login;
+export default withAuthRedirect(Login);
